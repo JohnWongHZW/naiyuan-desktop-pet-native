@@ -1,6 +1,7 @@
 # 奶螈桌宠 · 原生版
 
-把原 Electron 版「奶螈桌宠」用 **C++ / Win32 / GDI+** 重写成的 Windows 桌面宠物。Windows 10 / 11 x64 下单文件运行，不需要安装 Electron、Node.js、Python、.NET 或 VC++ 运行库，只依赖系统自带 DLL，也不需要管理员权限或联网。
+有同学写了Electron版「奶螈桌宠」但**体积太大**，所以我用C重写了一版。
+Windows 10 / 11 x64 下单文件运行，不需要安装 Electron、Node.js、Python、.NET 或 VC++ 运行库，只依赖系统自带 DLL，也不需要管理员权限或联网。
 
 [下载最新 Release](https://github.com/JohnWongHZW/naiyuan-desktop-pet-native/releases/latest) · [从源码构建](#构建)
 
@@ -8,7 +9,7 @@
 
 - 约 **15 MB**，相比原 Electron 版（约 120 MB）缩小约 **88%**。
 - 单 EXE，双击即用；首次开启 BGM 时把内嵌 MP3 写到系统临时目录，正常退出时删除。
-- 透明、无边框、置顶的 200 × 200 逻辑像素窗口；正式版不显示任务栏入口。
+- 透明、无边框、置顶的 200 × 200 逻辑像素窗口；不显示任务栏入口。
 - 保留原待机 GIF、点击 GIF、背景 MP3 的字节内容与原动画帧时长。
 - 左键拖动；移动超过 3 个逻辑像素视为拖拽，不触发点击。
 - 点击播放动画与音效，固定 **4.7 秒**后恢复待机；动画期间的重复点击不重新触发。
@@ -38,17 +39,8 @@ cd naiyuan-desktop-pet-native
 .\build.ps1 -Toolchain 'C:\path\to\mingw64\bin'
 ```
 
-产物写到仓库的**上级目录**，文件名为 `奶螈桌宠 1.1.0-原生版.exe`。`-Toolchain` 省略时默认使用 `D:\Dev\mingw64\bin`，建议按自己的安装路径传入。
+产物写到仓库的**上级目录**，文件名为 `奶螈桌宠 1.1.0-原生版.exe`。`-Toolchain` 。
 
-构建脚本做三件事：
-
-1. 用 `g++ -dumpspecs` 生成 `compiler.specs`，去掉工具链自动追加的 manifest，只保留本程序的 `app.manifest`；
-2. 用 `windres --codepage=65001` 把 `resources.rc` 中的图标、GIF、MP3、WAV 和版本信息编进 `resources.o`；
-3. 用 `g++ -std=c++17 -O2 -s -static -municode -mwindows` 静态链接成单个 EXE。
-
-### 可复现性
-
-按上面的命令重新构建，产物与 Release 附件大小一致（15,040,512 字节）。逐字节比较，差异只出现在 PE 头的 `TimeDateStamp`（偏移 `0x88`–`0x8B`）以及由它计算出的 `CheckSum`（偏移 `0xD8`–`0xDB`），其余内容完全相同；本次比较实际有 4 个字节不同。因此除链接时间戳外，本仓库可以从源码复现该 EXE。
 
 Release 附件的 SHA-256：
 
@@ -72,17 +64,11 @@ Release 附件的 SHA-256：
 | `assets/bgm.mp3` | 背景音乐 |
 | `assets/click.wav` | 点击音效（由原 OGG 解码） |
 
-仓库不包含构建产物（`resources.o`、`compiler.specs`、生成的 EXE）。`compiler.specs` 会在构建时自动重新生成。
+仓库不包含构建产物
 
 ## 说明
 
 - 这是对原程序的功能重写，**不是**对 Electron 原版的二进制重打包；窗口缩放与旋转使用 GDI+，边缘插值可能与 Chromium 略有差异。
 - 动画、拖动、防重复点击、4.7 秒切换、速度限制、碰壁反弹、旋转状态和 100% / 125% / 150% / 200% DPI 绘制均做过自动检查；系统音频接口返回播放成功，但未做人耳音质与长期连续循环验收。
 - 实际验证在单机完成，未覆盖所有 Windows 版本、声卡和混合 DPI 多显示器组合。
-- 素材来自原版「奶螈桌宠」，版权归原权利人所有（`Original assets © 2026 奶螈桌宠`）；本仓库为构建与分发该原生版而附带这些素材，再分发时请沿用原授权范围。
-
-## 参考
-
-- [UpdateLayeredWindow](https://learn.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-updatelayeredwindow)
-- [GDI+ Image Pixel Format Constants](https://learn.microsoft.com/windows/win32/gdiplus/-gdiplus-constant-image-pixel-format-constants)
-- [Per-Monitor DPI Awareness](https://learn.microsoft.com/windows/win32/hidpi/high-dpi-desktop-application-development-on-windows)
+- 素材来自互联网以及**上海应用技术大学Minecraft社团**；本仓库为构建与分发该版而附带这些素材，再分发时请沿用原授权范围。
