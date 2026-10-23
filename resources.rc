@@ -1,0 +1,31 @@
+#pragma code_page(65001)
+#include <windows.h>
+1 ICON "assets/app.ico"
+1 RT_MANIFEST "app.manifest"
+101 RCDATA "assets/idle.gif"
+102 RCDATA "assets/click.gif"
+103 RCDATA "assets/bgm.mp3"
+104 RCDATA "assets/click.wav"
+1 VERSIONINFO
+FILEVERSION 1,1,0,0
+PRODUCTVERSION 1,1,0,0
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+BEGIN
+ BLOCK "StringFileInfo"
+ BEGIN
+  BLOCK "080404b0"
+  BEGIN
+   VALUE "CompanyName", "奶螈桌宠"
+   VALUE "FileDescription", "奶螈桌宠 原生版"
+   VALUE "FileVersion", "1.1.0"
+   VALUE "ProductName", "奶螈桌宠"
+   VALUE "ProductVersion", "1.1.0-native"
+   VALUE "LegalCopyright", "Original assets © 2026 奶螈桌宠"
+  END
+ END
+ BLOCK "VarFileInfo"
+ BEGIN
+  VALUE "Translation", 0x804, 1200
+ END
+END
